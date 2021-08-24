@@ -1,0 +1,47 @@
+{
+    "name": "salt/craft-auth0",
+    "description": "Authentication with auth0",
+    "type": "craft-plugin",
+    "version": "1",
+    "keywords": [
+        "craft",
+        "cms",
+        "craftcms",
+        "craft-plugin",
+        "craft-auth0"
+    ],
+    "support": {
+        "docs": "https://github.com/pangostudio/craft-auth0/blob/master/README.md",
+        "issues": "https://github.com/pangostudio/craft-auth0/issues"
+    },
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Salt",
+            "homepage": "https://saltedu.co"
+        }
+    ],
+    "require": {
+        "craftcms/cms": "^3.0.0",
+        "auth0/auth0-php": "^7.9"
+    },
+    "require-dev": {
+      "craftcms/cms": "^3.2.0",
+      "codeception/codeception": "^3.0",
+      "vlucas/phpdotenv": "^3.0"
+    },
+    "autoload": {
+        "psr-4": {
+          "salt\\craftauth0\\": "src/"
+        }
+    },
+    "extra": {
+        "name": "craft-auth0",
+        "handle": "craft-auth0",
+        "developer": "Salt",
+        "developerUrl": "SaltEdu.co",
+        "documentationUrl": "https://github.com/pangostudio/craft-auth0/blob/master/README.md",
+        "changelogUrl": "https://raw.githubusercontent.com/pangostudio/craft-auth0/master/CHANGELOG.md",
+        "class": "salt\\craftauth0\\Auth0"
+    }
+}
