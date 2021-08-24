@@ -15,11 +15,18 @@ use Craft;
 use craft\web\View;
 use yii\base\Event;
 use craft\base\Plugin;
+use craft\base\Element;
+use craft\elements\User;
 use craft\web\UrlManager;
 use craft\services\Plugins;
 use craft\events\PluginEvent;
+use craft\events\DefineBehaviorsEvent;
 use craft\events\RegisterUrlRulesEvent;
+use craft\events\RegisterTemplateRootsEvent;
+use salt\craftauth0\behaviors\Auth0UserBehavior;
 use salt\craftauth0\controllers\LoginController;
+use salt\craftauth0\controllers\LogoutController;
+use craft\events\RegisterElementTableAttributesEvent;
 
 /**
  * Craft plugins are very much like little applications in and of themselves. We’ve made
@@ -76,6 +83,7 @@ class Auth0 extends Plugin
     /** @var array */
     public $controllerMap = [
         'login' => LoginController::class,
+        'logout' => LogoutController::class,
     ];
 
     // Public Methods
@@ -104,7 +112,7 @@ class Auth0 extends Plugin
             View::class,
             View::EVENT_REGISTER_SITE_TEMPLATE_ROOTS,
             function(RegisterTemplateRootsEvent $event) {
-                $event->roots[$this->id] = __DIR__ . '/templates';
+                $event->roots['_auth0'] = __DIR__ . '/templates';
             }
         );
 
@@ -120,35 +128,66 @@ class Auth0 extends Plugin
             }
         );
 
+        Event::on(User::class, Element::EVENT_REGISTER_TABLE_ATTRIBUTES, function (RegisterElementTableAttributesEvent $event) {
+            $event->tableAttributes['sub'] = [
+                    'label' => "Auth0 Sub"
+                ];
+        });
+
      
 
-    Event::on(
-        UrlManager::class,
-        UrlManager::EVENT_REGISTER_SITE_URL_RULES,
-        function(RegisterUrlRulesEvent $event) {
-            $event->rules['auth'] = 'craft-auth0/login/auth';
-            $event->rules['auth0/callback'] = 'craft-auth0/login/callback';
-        }
-    );
+        Event::on(
+            UrlManager::class,
+            UrlManager::EVENT_REGISTER_SITE_URL_RULES,
+            function(RegisterUrlRulesEvent $event) {
+                $event->rules['login'] = 'craft-auth0/login/auth';
+                $event->rules['auth'] = 'craft-auth0/login/auth';
+                $event->rules['auth0/callback'] = 'craft-auth0/login/callback';
+                $event->rules['logout'] = 'craft-auth0/logout/logout';
+                $event->rules['auth/logout'] = 'craft-auth0/logout/logout';
+                $event->rules['logout-confirm'] = ['template' => '_auth0/logout_confirm'];
+            }
+        );
+       
+        Event::on(
+            UrlManager::class,
+            UrlManager::EVENT_REGISTER_CP_URL_RULES,
+            function(RegisterUrlRulesEvent $event) {
+                $event->rules['logout'] = 'craft-auth0/logout/logout';
+                $event->rules['login'] = 'craft-auth0/login/auth';
+               
+            }
+        );
 
-/**
- * Logging in Craft involves using one of the following methods:
- *
- * Craft::trace(): record a message to trace how a piece of code runs. This is mainly for development use.
- * Craft::info(): record a message that conveys some useful information.
- * Craft::warning(): record a warning message that indicates something unexpected has happened.
- * Craft::error(): record a fatal error that should be investigated as soon as possible.
- *
- * Unless `devMode` is on, only Craft::warning() & Craft::error() will log to `craft/storage/logs/web.log`
- *
- * It's recommended that you pass in the magic constant `__METHOD__` as the second parameter, which sets
- * the category to the method (prefixed with the fully qualified class name) where the constant appears.
- *
- * To enable the Yii debug toolbar, go to your user account in the AdminCP and check the
- * [] Show the debug toolbar on the front end & [] Show the debug toolbar on the Control Panel
- *
- * http://www.yiiframework.com/doc-2.0/guide-runtime-logging.html
- */
+        Event::on(
+            User::class,
+            User::EVENT_DEFINE_BEHAVIORS,
+            function(DefineBehaviorsEvent $event) {
+                $event->sender->attachBehavior(
+                    'Auth0 user behavior',
+                    Auth0UserBehavior::class
+                );
+            }
+        );
+
+        /**
+         * Logging in Craft involves using one of the following methods:
+         *
+         * Craft::trace(): record a message to trace how a piece of code runs. This is mainly for development use.
+         * Craft::info(): record a message that conveys some useful information.
+         * Craft::warning(): record a warning message that indicates something unexpected has happened.
+         * Craft::error(): record a fatal error that should be investigated as soon as possible.
+         *
+         * Unless `devMode` is on, only Craft::warning() & Craft::error() will log to `craft/storage/logs/web.log`
+         *
+         * It's recommended that you pass in the magic constant `__METHOD__` as the second parameter, which sets
+         * the category to the method (prefixed with the fully qualified class name) where the constant appears.
+         *
+         * To enable the Yii debug toolbar, go to your user account in the AdminCP and check the
+         * [] Show the debug toolbar on the front end & [] Show the debug toolbar on the Control Panel
+         *
+         * http://www.yiiframework.com/doc-2.0/guide-runtime-logging.html
+         */
         Craft::info(
             Craft::t(
                 'craft-auth0',
