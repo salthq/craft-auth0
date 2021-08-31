@@ -2,7 +2,7 @@
     "name": "salt/craft-auth0",
     "description": "Authentication with auth0",
     "type": "craft-plugin",
-    "version": "1",
+    "version": "1.1",
     "keywords": [
         "craft",
         "cms",
@@ -23,7 +23,7 @@
     ],
     "require": {
         "craftcms/cms": "^3.0.0",
-        "auth0/auth0-php": "^7.9"
+        "auth0/auth0-php": "^7.9.2"
     },
     "require-dev": {
       "craftcms/cms": "^3.2.0",
