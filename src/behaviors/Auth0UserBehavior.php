@@ -2,7 +2,7 @@
 
 namespace salt\craftauth0\behaviors;
 
-use craft\test\Craft;
+use Craft;
 use yii\base\Behavior;
 
 class Auth0UserBehavior extends Behavior
