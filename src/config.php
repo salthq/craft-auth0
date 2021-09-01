@@ -98,5 +98,13 @@ return [
         |
         */
         // 'guzzle_options' => []
+    ],
+
+    'auth0LoginParams' => [
+        'background' => App::env('LOGIN_BG'),
+        'logo' => App::env('APP_LOGO'),
+        'buttonColor' => App::env('PRIMARY_COLOUR'),
+        'appName' => App::env('APP_NAME'),
+        'defaultConnection' => App::env('AUTH0_DB_CONNECTION'),
     ]
 ];

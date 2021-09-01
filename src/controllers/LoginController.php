@@ -45,6 +45,11 @@ class LoginController extends Controller
         $authorize_params = [
             'scope' => 'openid profile email offline_access'
         ];
+        $config_params = Craft::$app->config->general->__isset('auth0LoginParams') ? Craft::$app->config->general->auth0LoginParams : false;
+        if (is_array($config_params)) {
+            $authorize_params = array_merge($authorize_params,$config_params);
+        };
+        
         $auth0Config = Craft::$app->config->getConfigFromFile('craft-auth0');
         $auth0 = new Auth0($auth0Config);
       
