@@ -15,11 +15,15 @@ use Craft;
 use craft\web\View;
 use yii\base\Event;
 use craft\base\Plugin;
+use craft\web\Request;
+use yii\web\UserEvent;
 use craft\base\Element;
 use craft\elements\User;
+use craft\web\Controller;
 use craft\web\UrlManager;
 use craft\services\Plugins;
 use craft\events\PluginEvent;
+use craft\web\User as WebUser;
 use craft\events\DefineBehaviorsEvent;
 use craft\events\RegisterUrlRulesEvent;
 use craft\events\RegisterTemplateRootsEvent;
@@ -156,6 +160,15 @@ class Auth0 extends Plugin
                 $event->rules['logout'] = 'craft-auth0/logout/logout';
                 $event->rules['login'] = 'craft-auth0/login/auth';
                
+            }
+        );
+
+        Event::on(
+            WebUser::class,
+            WebUser::EVENT_AFTER_LOGOUT,
+            function (UserEvent $event) {
+                header('Location: /logout');
+                exit;
             }
         );
 

@@ -19,10 +19,6 @@ class LogoutController extends Controller
     protected $allowAnonymous = ['logout'];
 
     public function actionLogout() {
-
-        Craft::dd('sss');
-
-        Craft::$app->getUser()->logout();
        
         $auth0Config = Craft::$app->config->getConfigFromFile('craft-auth0');
         $auth0 = new Auth0($auth0Config);
@@ -41,4 +37,5 @@ class LogoutController extends Controller
         $this->redirect($auth0_logout_url);
         
    }
+
 }
