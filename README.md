@@ -18,7 +18,7 @@ To install the plugin, follow these instructions.
 
 2. Then tell Composer to load the plugin:
 
-        composer require pangostudio/craft-auth0-login
+        composer require pangostudio/craft-auth0
 
 3. In the Control Panel, go to Settings → Plugins and click the “Install” button for craft-auth0-login.
 
@@ -26,11 +26,11 @@ To install the plugin, follow these instructions.
 
 -Insert text here-
 
-## Configuring craft-auth0-login
+## Configuring craft-auth0
 
 -Insert text here-
 
-## Using craft-auth0-login
+## Using craft-auth0
 
 -Insert text here-
 
