@@ -12,6 +12,7 @@ use craft\elements\User;
 use craft\db\Command;
 use yii\web\Response;
 use craft\helpers\Db;
+use craft\helpers\UrlHelper;
 
 class LoginController extends Controller
 {
@@ -35,15 +36,14 @@ class LoginController extends Controller
     public function actionAuth() {
 
         $this->originUrl = Craft::$app->getRequest()->referrer;
-
-        $this->redirectUrl = Craft::$app->getRequest()->getParam('redirect');
-    
+        
+        $this->redirectUrl = Craft::$app->getRequest()->getParam('redirect') ?? '/admin';
+   
         if ($user = Craft::$app->getUser()->getIdentity()) {    
             $this->redirect($this->redirectUrl);
         }
         $authorize_params = [
-            'scope' => 'openid profile email offline_access',
-            'appName' => 'SALTY',
+            'scope' => 'openid profile email offline_access'
         ];
         $auth0Config = Craft::$app->config->getConfigFromFile('craft-auth0');
         $auth0 = new Auth0($auth0Config);
@@ -148,7 +148,7 @@ class LoginController extends Controller
         $session->setFlash('login','You have been successfully logged in');
         
 
-        return $this->redirect($this->redirectUrl);
+        return $this->redirect('/admin');
     }
 
     /**
