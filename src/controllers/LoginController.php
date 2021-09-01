@@ -152,8 +152,9 @@ class LoginController extends Controller
         $session = Craft::$app->getSession();
         $session->setFlash('login','You have been successfully logged in');
         
+        $login_redirect = Craft::$app->config->general->__isset('auth0LoginRedirect') ? Craft::$app->config->general->auth0LoginRedirect : '/';
 
-        return $this->redirect('/admin');
+        return $this->redirect($login_redirect);
     }
 
     /**

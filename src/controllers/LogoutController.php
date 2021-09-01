@@ -20,6 +20,10 @@ class LogoutController extends Controller
 
     public function actionLogout() {
        
+        // Doublt check user is logged out
+        if (Craft::$app->getUser()) {
+            Craft::$app->getUser()->logout();
+        }
         $auth0Config = Craft::$app->config->getConfigFromFile('craft-auth0');
         $auth0 = new Auth0($auth0Config);
 

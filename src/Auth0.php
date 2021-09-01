@@ -148,7 +148,6 @@ class Auth0 extends Plugin
                 $event->rules['auth'] = 'craft-auth0/login/auth';
                 $event->rules['auth0/callback'] = 'craft-auth0/login/callback';
                 $event->rules['logout'] = 'craft-auth0/logout/logout';
-                $event->rules['auth/logout'] = 'craft-auth0/logout/logout';
                 $event->rules['logout-confirm'] = ['template' => '_auth0/logout_confirm'];
             }
         );
