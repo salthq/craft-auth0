@@ -2,7 +2,7 @@
     "name": "salt/craft-auth0",
     "description": "Authentication with auth0",
     "type": "craft-plugin",
-    "version": "1.3.3",
+    "version": "1.3.4",
     "keywords": [
         "craft",
         "cms",
