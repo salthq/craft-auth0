@@ -20,7 +20,7 @@ class LogoutController extends Controller
 
     public function actionLogout() {
        
-        // Doublt check user is logged out
+        // Double check user is logged out
         if (Craft::$app->getUser()) {
             Craft::$app->getUser()->logout();
         }

@@ -27,6 +27,7 @@ use craft\web\User as WebUser;
 use craft\events\DefineBehaviorsEvent;
 use craft\events\RegisterUrlRulesEvent;
 use craft\events\RegisterTemplateRootsEvent;
+use salt\craftauth0\controllers\UserController;
 use salt\craftauth0\behaviors\Auth0UserBehavior;
 use salt\craftauth0\controllers\LoginController;
 use salt\craftauth0\controllers\LogoutController;
@@ -88,6 +89,7 @@ class Auth0 extends Plugin
     public $controllerMap = [
         'login' => LoginController::class,
         'logout' => LogoutController::class,
+        'user' => UserController::class,
     ];
 
     // Public Methods
@@ -181,6 +183,12 @@ class Auth0 extends Plugin
                 );
             }
         );
+
+        Event::on(\craft\services\Elements::class, \craft\services\Elements::EVENT_AFTER_SAVE_ELEMENT, function(Event $event) {
+            if ($event->element instanceof User) {
+                UserController::update($event->element);
+            }
+        });
 
         /**
          * Logging in Craft involves using one of the following methods:
