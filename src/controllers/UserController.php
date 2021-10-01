@@ -21,7 +21,7 @@ class UserController extends Controller
    
     public static function update($user) {
 
-        $email = null;
+        
         $user_data = null;
         // If user sub exists then just fetch them from Auth0
         if ($user->sub) {
@@ -41,8 +41,7 @@ class UserController extends Controller
                 if (empty($user_data)) {
                     $auth0_user = (new Auth0ApiService)->createAuth0User($user->email, $user->name);
                     $user->setSub($auth0_user->user_id);
-                    // Send Password reset email
-                    $email = (new Auth0ApiService)->sendPasswordResetEmail($user->email);
+                  
                     
                 } else {
                     $user->setSub($user_data[0]->user_id);
@@ -51,8 +50,9 @@ class UserController extends Controller
 
         } 
         // If reset password wansn't set but admin specifically checked it, then send
-        if (!$email && $user->passwordResetRequired) {
-            $email = (new Auth0ApiService)->sendPasswordResetEmail($user->email);
+        if ($user->firstSave || $user->passwordResetRequired) {
+            // Send Password reset email
+            (new Auth0ApiService)->sendPasswordResetEmail($user->email);
         }
 
         return $user;
