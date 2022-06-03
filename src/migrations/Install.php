@@ -8,7 +8,7 @@ use craft\db\Migration;
 /**
  * m210823_050134_add_sub_to_users_table migration.
  */
-class m210823_050134_add_sub_to_users_table extends Migration
+class Install extends Migration
 {
     /**
      * @inheritdoc
