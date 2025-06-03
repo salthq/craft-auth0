@@ -77,9 +77,6 @@ class LoginController extends Controller
         error_log('DEBUG: User not logged in, starting Auth0 flow');
         Craft::info('User not logged in, starting Auth0 flow', __METHOD__);
         
-        // Let's temporarily just output something to see if we get here
-        die('DEBUG: LoginController actionAuth() method reached - Auth0 flow would start here');
-        
         $authorize_params = [
             'scope' => 'openid profile email offline_access'
         ];
