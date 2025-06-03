@@ -142,6 +142,23 @@ class Auth0 extends Plugin
 
      
 
+        Event::on(\craft\web\Application::class, \craft\web\Application::EVENT_BEFORE_ACTION, function(Event $event) {
+            $request = Craft::$app->getRequest();
+            
+            // Check if this is a login-related request by examining the URL
+            $url = $request->getUrl();
+            
+            if (strpos($url, '/login') !== false || strpos($url, '/admin/login') !== false) {
+                Craft::info('Auth0 plugin: Intercepting login request: ' . $url, __METHOD__);
+                
+                // Redirect to our Auth0 login controller
+                $response = Craft::$app->getResponse();
+                $response->redirect('/?r=craft-auth0/login/auth');
+                $event->isValid = false; // Stop the original action
+                Craft::$app->end();
+            }
+        });
+
         Event::on(
             UrlManager::class,
             UrlManager::EVENT_REGISTER_SITE_URL_RULES,
@@ -158,6 +175,9 @@ class Auth0 extends Plugin
             UrlManager::class,
             UrlManager::EVENT_REGISTER_CP_URL_RULES,
             function(RegisterUrlRulesEvent $event) {
+                // Add debugging to see if this event fires
+                Craft::info('Auth0 plugin: Registering CP URL rules', __METHOD__);
+                
                 // Override all possible login/logout routes with higher priority
                 // Put these at the beginning of the rules array to ensure they take precedence
                 $authRules = [
@@ -167,8 +187,12 @@ class Auth0 extends Plugin
                     'admin/logout' => 'craft-auth0/logout/logout',
                 ];
                 
+                Craft::info('Auth0 plugin: Adding auth rules: ' . print_r($authRules, true), __METHOD__);
+                
                 // Prepend our rules to ensure they have priority
                 $event->rules = array_merge($authRules, $event->rules);
+                
+                Craft::info('Auth0 plugin: Total CP rules after merge: ' . count($event->rules), __METHOD__);
             }
         );
 
