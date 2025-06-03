@@ -58,6 +58,9 @@ class LoginController extends Controller
     private $originUrl;
    
     public function actionAuth() {
+        // Very basic debugging - this should definitely show up
+        error_log('DEBUG: Auth0 LoginController::actionAuth() called!');
+        
         // Add debugging to help diagnose the issue
         Craft::info('Auth0 LoginController::actionAuth() called from: ' . Craft::$app->getRequest()->getUrl(), __METHOD__);
 
@@ -66,11 +69,16 @@ class LoginController extends Controller
         $this->redirectUrl = Craft::$app->getRequest()->getParam('redirect') ?? '/admin';
    
         if ($user = Craft::$app->getUser()->getIdentity()) {
+            error_log('DEBUG: User already logged in, redirecting to: ' . $this->redirectUrl);
             Craft::info('User already logged in, redirecting to: ' . $this->redirectUrl, __METHOD__);
             return $this->redirect($this->redirectUrl);
         }
         
+        error_log('DEBUG: User not logged in, starting Auth0 flow');
         Craft::info('User not logged in, starting Auth0 flow', __METHOD__);
+        
+        // Let's temporarily just output something to see if we get here
+        die('DEBUG: LoginController actionAuth() method reached - Auth0 flow would start here');
         
         $authorize_params = [
             'scope' => 'openid profile email offline_access'
