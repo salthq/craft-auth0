@@ -80,12 +80,17 @@ class LoginController extends Controller
    }
 
    public function actionCallback() : Response {
+        error_log('DEBUG: LoginController::actionCallback() called');
+        
         // Get a handle of the Auth0 service (we don't know if it has an alias)
         $auth0Config = Craft::$app->config->getConfigFromFile('craft-auth0');
         $auth0 = new Auth0($auth0Config);
         
+        error_log('DEBUG: Getting user profile from Auth0');
         // Try to get the user information
         $profile = $auth0->getUser();
+        
+        error_log('DEBUG: Auth0 profile: ' . print_r($profile, true));
       
         // try {
             
@@ -100,13 +105,16 @@ class LoginController extends Controller
 
    private function registerOrLoginFromProfile(array $profile)
     {
+        error_log('DEBUG: registerOrLoginFromProfile called');
       
         // Upsert new user
         $craftUser = $this->upsertUser($profile);
         if (!$craftUser) {
+            error_log('DEBUG: Failed to create/get craft user');
             throw new \Exception('Craft user could not be created.');
         }
 
+        error_log('DEBUG: Craft user created/found: ' . $craftUser->email);
 
         // Login
         return $this->login($craftUser);
@@ -165,18 +173,22 @@ class LoginController extends Controller
 
     private function login(User $craftUser): Response
     {
+        error_log('DEBUG: Attempting to login user: ' . $craftUser->email);
 
         // Craft::dd(Craft::$app->getUser()->login($craftUser));
         if (!Craft::$app->getUser()->login($craftUser)) {
+            error_log('DEBUG: Craft login failed');
             return $this->_handleLoginFailure();
         }
 
+        error_log('DEBUG: Craft login successful');
         
         $session = Craft::$app->getSession();
         $session->setFlash('login','You have been successfully logged in');
         
         $login_redirect = Craft::$app->config->general->__isset('auth0LoginRedirect') ? Craft::$app->config->general->auth0LoginRedirect : '/';
 
+        error_log('DEBUG: Redirecting to: ' . $login_redirect);
         return $this->redirect($login_redirect);
     }
 
