@@ -56,7 +56,7 @@ class LoginController extends Controller
             Craft::info('User already logged in, redirecting to: ' . $this->redirectUrl, __METHOD__);
             
             // Use a JavaScript redirect to preserve the session
-            return $this->renderTemplate('_auth0/redirect', [
+            return $this->renderTemplate('redirect', [
                 'redirectUrl' => $this->redirectUrl
             ]);
         }
@@ -229,7 +229,7 @@ class LoginController extends Controller
         error_log('DEBUG: Redirecting to: ' . $login_redirect);
         
         // Use template redirect to preserve session
-        return $this->renderTemplate('_auth0/redirect', [
+        return $this->renderTemplate('redirect', [
             'redirectUrl' => $login_redirect
         ]);
     }
