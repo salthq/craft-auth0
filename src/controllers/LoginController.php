@@ -16,8 +16,21 @@ use craft\helpers\UrlHelper;
 
 class LoginController extends Controller
 {
+    public $allowAnonymous = ['auth', 'callback'];
 
-    protected $allowAnonymous = ['auth', 'callback'];
+    /**
+     * @inheritdoc
+     */
+    public function beforeAction($action): bool
+    {
+        // Allow anonymous access to auth and callback actions
+        if (in_array($action->id, ['auth', 'callback'])) {
+            $this->enableCsrfValidation = false;
+            $this->requireAcceptedTerms = false;
+        }
+        
+        return parent::beforeAction($action);
+    }
 
      /**
      * URL to redirect to after login.

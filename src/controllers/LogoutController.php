@@ -15,8 +15,7 @@ use craft\helpers\UrlHelper;
 
 class LogoutController extends Controller
 {
-
-    protected $allowAnonymous = ['logout'];
+    public $allowAnonymous = ['logout'];
 
     public function actionLogout() {
        
