@@ -156,6 +156,12 @@ class Auth0 extends Plugin
             
             error_log('DEBUG: Checking URL: ' . $url);
             
+            // Don't intercept our own controller routes to prevent redirect loops
+            if (strpos($url, 'r=craft-auth0') !== false || strpos($url, 'craft-auth0/') !== false) {
+                error_log('DEBUG: Skipping interception - this is our own controller route');
+                return;
+            }
+            
             if (strpos($url, '/login') !== false || strpos($url, '/admin/login') !== false) {
                 error_log('DEBUG: Auth0 plugin intercepting login request: ' . $url);
                 Craft::info('Auth0 plugin: Intercepting login request: ' . $url, __METHOD__);
