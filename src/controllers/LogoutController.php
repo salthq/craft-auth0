@@ -22,10 +22,24 @@ class LogoutController extends Controller
     {
         // Allow anonymous access to logout action
         if ($action->id === 'logout') {
-            $this->requireLogin = false;
+            // Skip authentication check for this action
+            return parent::beforeAction($action);
         }
         
         return parent::beforeAction($action);
+    }
+    
+    /**
+     * @inheritdoc
+     */
+    protected function checkAccess($action): void
+    {
+        // Allow anonymous access to logout action
+        if ($action->id === 'logout') {
+            return;
+        }
+        
+        parent::checkAccess($action);
     }
 
     public function actionLogout() {

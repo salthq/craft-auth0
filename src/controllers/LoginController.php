@@ -23,10 +23,24 @@ class LoginController extends Controller
     {
         // Allow anonymous access to auth and callback actions
         if (in_array($action->id, ['auth', 'callback'])) {
-            $this->requireLogin = false;
+            // Skip authentication check for these actions
+            return parent::beforeAction($action);
         }
         
         return parent::beforeAction($action);
+    }
+    
+    /**
+     * @inheritdoc
+     */
+    protected function checkAccess($action): void
+    {
+        // Allow anonymous access to auth and callback actions
+        if (in_array($action->id, ['auth', 'callback'])) {
+            return;
+        }
+        
+        parent::checkAccess($action);
     }
 
      /**
