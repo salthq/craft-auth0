@@ -163,11 +163,10 @@ class LoginController extends Controller
 
         error_log('DEBUG: Setting user attributes - email: ' . $profile['email'] . ', name: ' . $profile['name'] . ', username: ' . $username);
 
-        $newUser->setAttributes([
-            'email' => $profile['email'],
-            'name' => $profile['name'],
-            'username' => $username
-        ]);
+        // Set properties directly instead of using setAttributes
+        $newUser->email = $profile['email'];
+        $newUser->name = $profile['name'];
+        $newUser->username = $username;
    
         $newUser->setSub($profile['sub']);
 
