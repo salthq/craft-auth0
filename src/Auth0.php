@@ -86,7 +86,7 @@ class Auth0 extends Plugin
     public bool $hasCpSection = false;
 
     /** @var array */
-    public array $controllerMap = [
+    public $controllerMap = [
         'login' => LoginController::class,
         'logout' => LogoutController::class,
         'user' => UserController::class,
