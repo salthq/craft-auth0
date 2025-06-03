@@ -162,7 +162,9 @@ class Auth0 extends Plugin
                 return;
             }
             
-            if (strpos($url, '/login') !== false || strpos($url, '/admin/login') !== false) {
+            // Only intercept specific login URLs, not all admin access
+            if ($url === '/admin/login' || $url === '/login') {
+                error_log('DEBUG: Intercepting specific login URL: ' . $url);
                 Craft::info('Auth0 plugin: Intercepting login request: ' . $url, __METHOD__);
                 
                 // Redirect to our Auth0 login controller using the clean route
@@ -170,6 +172,31 @@ class Auth0 extends Plugin
                 $response->redirect('/login');
                 $event->isValid = false; // Stop the original action
                 Craft::$app->end();
+            }
+            
+            // For /admin access, check if user is actually logged in before intercepting
+            if ($url === '/admin' || strpos($url, '/admin') === 0) {
+                $user = Craft::$app->getUser();
+                $session = Craft::$app->getSession();
+                
+                error_log('DEBUG: Checking admin access - URL: ' . $url);
+                error_log('DEBUG: Session ID: ' . $session->getId());
+                error_log('DEBUG: User guest status: ' . ($user->getIsGuest() ? 'guest' : 'logged in'));
+                
+                if ($user->getIdentity()) {
+                    error_log('DEBUG: User identity found: ' . $user->getIdentity()->email);
+                    // User is logged in, don't intercept
+                    return;
+                } else {
+                    error_log('DEBUG: No user identity, intercepting admin access');
+                    Craft::info('Auth0 plugin: Intercepting admin access for unauthenticated user: ' . $url, __METHOD__);
+                    
+                    // Redirect to our Auth0 login controller
+                    $response = Craft::$app->getResponse();
+                    $response->redirect('/login');
+                    $event->isValid = false; // Stop the original action
+                    Craft::$app->end();
+                }
             }
         });
 
