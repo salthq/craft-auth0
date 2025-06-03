@@ -195,8 +195,21 @@ class LoginController extends Controller
 
         error_log('DEBUG: Craft login successful');
         
+        // Ensure the session is written immediately
         $session = Craft::$app->getSession();
         $session->setFlash('login','You have been successfully logged in');
+        
+        // Force session save to ensure user login is persisted
+        $session->close();
+        $session->open();
+        
+        // Double-check that the user is actually logged in
+        if (Craft::$app->getUser()->getIsGuest()) {
+            error_log('DEBUG: User is still guest after login - session issue');
+            return $this->_handleLoginFailure();
+        }
+        
+        error_log('DEBUG: User confirmed logged in, session ID: ' . $session->getId());
         
         // Check if auth0LoginRedirect is set in the general config
         $login_redirect = '/admin'; // Default to admin panel
