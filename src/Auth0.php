@@ -110,6 +110,10 @@ class Auth0 extends Plugin
     {
         parent::init();
         self::$plugin = $this;
+        
+        // Basic debugging to confirm plugin initialization
+        error_log('DEBUG: Auth0 plugin init() method called');
+        
         // Define a custom alias named after the namespace
         Craft::setAlias('@auth0', __DIR__);
         // Set the controllerNamespace 
@@ -143,12 +147,17 @@ class Auth0 extends Plugin
      
 
         Event::on(\craft\web\Application::class, \craft\web\Application::EVENT_BEFORE_ACTION, function(Event $event) {
+            error_log('DEBUG: Auth0 EVENT_BEFORE_ACTION triggered');
+            
             $request = Craft::$app->getRequest();
             
             // Check if this is a login-related request by examining the URL
             $url = $request->getUrl();
             
+            error_log('DEBUG: Checking URL: ' . $url);
+            
             if (strpos($url, '/login') !== false || strpos($url, '/admin/login') !== false) {
+                error_log('DEBUG: Auth0 plugin intercepting login request: ' . $url);
                 Craft::info('Auth0 plugin: Intercepting login request: ' . $url, __METHOD__);
                 
                 // Redirect to our Auth0 login controller
@@ -163,6 +172,7 @@ class Auth0 extends Plugin
             UrlManager::class,
             UrlManager::EVENT_REGISTER_SITE_URL_RULES,
             function(RegisterUrlRulesEvent $event) {
+                error_log('DEBUG: Auth0 registering site URL rules');
                 $event->rules['login'] = 'craft-auth0/login/auth';
                 $event->rules['auth'] = 'craft-auth0/login/auth';
                 $event->rules['auth0/callback'] = 'craft-auth0/login/callback';
@@ -176,6 +186,7 @@ class Auth0 extends Plugin
             UrlManager::EVENT_REGISTER_CP_URL_RULES,
             function(RegisterUrlRulesEvent $event) {
                 // Add debugging to see if this event fires
+                error_log('DEBUG: Auth0 registering CP URL rules');
                 Craft::info('Auth0 plugin: Registering CP URL rules', __METHOD__);
                 
                 // Override all possible login/logout routes with higher priority
