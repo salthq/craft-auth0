@@ -16,8 +16,6 @@ use craft\helpers\UrlHelper;
 
 class LoginController extends Controller
 {
-    public $allowAnonymous = ['auth', 'callback'];
-
     /**
      * @inheritdoc
      */
@@ -25,8 +23,7 @@ class LoginController extends Controller
     {
         // Allow anonymous access to auth and callback actions
         if (in_array($action->id, ['auth', 'callback'])) {
-            $this->enableCsrfValidation = false;
-            $this->requireAcceptedTerms = false;
+            $this->requireLogin = false;
         }
         
         return parent::beforeAction($action);

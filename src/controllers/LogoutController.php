@@ -15,7 +15,18 @@ use craft\helpers\UrlHelper;
 
 class LogoutController extends Controller
 {
-    public $allowAnonymous = ['logout'];
+    /**
+     * @inheritdoc
+     */
+    public function beforeAction($action): bool
+    {
+        // Allow anonymous access to logout action
+        if ($action->id === 'logout') {
+            $this->requireLogin = false;
+        }
+        
+        return parent::beforeAction($action);
+    }
 
     public function actionLogout() {
        
