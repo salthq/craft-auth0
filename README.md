@@ -1,4 +1,4 @@
-# craft-auth0-login plugin for Craft CMS 3.x
+# craft-auth0-login plugin for Craft CMS 4.x
 
 login with auth0
 
@@ -6,21 +6,23 @@ login with auth0
 
 ## Requirements
 
-This plugin requires Craft CMS 3.0.0-beta.23 or later.
+This plugin requires Craft CMS 4.0.0 or later and PHP 8.0.2 or later.
+
+For Craft CMS 3.x compatibility, use version 1.x of this plugin.
 
 ## Installation
 
 To install the plugin, follow these instructions.
 
-1. Open your terminal and go to your Craft project:
+1.  Open your terminal and go to your Craft project:
 
         cd /path/to/project
 
-2. Then tell Composer to load the plugin:
+2.  Then tell Composer to load the plugin:
 
         composer require pangostudio/craft-auth0
 
-3. In the Control Panel, go to Settings → Plugins and click the “Install” button for craft-auth0-login.
+3.  In the Control Panel, go to Settings → Plugins and click the "Install" button for craft-auth0-login.
 
 ## craft-auth0-login Overview
 
@@ -38,6 +40,11 @@ To install the plugin, follow these instructions.
 
 Some things to do, and ideas for potential features:
 
-* Release it
+-   Release it
+
+## Version History
+
+-   **2.0.0** - Craft CMS 4.x compatibility (breaking change)
+-   **1.x** - Craft CMS 3.x compatibility
 
 Brought to you by [Salt](SaltEdu.co)

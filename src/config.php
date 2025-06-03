@@ -1,5 +1,7 @@
 <?php
 
+use craft\helpers\App;
+
 return [
 
     'auth0Congig' => [
@@ -10,7 +12,7 @@ return [
         |   As set in the auth0 administration page
         |
         */
-        'domain'        => env( 'AUTH0_DOMAIN' ),
+        'domain'        => App::env( 'AUTH0_DOMAIN' ),
 
         /*
         |--------------------------------------------------------------------------
@@ -19,7 +21,7 @@ return [
         |   As set in the auth0 administration page
         |
         */
-        'client_id'     => env( 'AUTH0_CLIENT_ID' ),
+        'client_id'     => App::env( 'AUTH0_CLIENT_ID' ),
 
         /*
         |--------------------------------------------------------------------------
@@ -28,7 +30,7 @@ return [
         |   As set in the auth0 administration page
         |
         */
-        'client_secret' => env( 'AUTH0_CLIENT_SECRET' ),
+        'client_secret' => App::env( 'AUTH0_CLIENT_SECRET' ),
 
         /*
         |--------------------------------------------------------------------------
@@ -38,7 +40,7 @@ return [
         |   'Auth0\Login\Auth0Controller@callback'
         |
         */
-        'redirect_uri'  => env( 'PRIMARY_SITE_URL' ) . '/auth0/callback',
+        'redirect_uri'  => App::env( 'PRIMARY_SITE_URL' ) . '/auth0/callback',
 
         /*
         |--------------------------------------------------------------------------
@@ -62,7 +64,7 @@ return [
         |   This is used to verify the decoded tokens when using RS256
         |
         */
-        'authorized_issuers'  => [ env( 'AUTH0_DOMAIN' ) ],
+        'authorized_issuers'  => [ App::env( 'AUTH0_DOMAIN' ) ],
 
         /*
         |--------------------------------------------------------------------------

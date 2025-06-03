@@ -1,6 +1,6 @@
 <?php
 /**
- * craft-auth0 plugin for Craft CMS 3.x
+ * craft-auth0 plugin for Craft CMS 4.x
  *
  * login with auth0
  *
@@ -34,14 +34,14 @@ use salt\craftauth0\controllers\LogoutController;
 use craft\events\RegisterElementTableAttributesEvent;
 
 /**
- * Craft plugins are very much like little applications in and of themselves. We’ve made
+ * Craft plugins are very much like little applications in and of themselves. We've made
  * it as simple as we can, but the training wheels are off. A little prior knowledge is
  * going to be required to write a plugin.
  *
- * For the purposes of the plugin docs, we’re going to assume that you know PHP and SQL,
+ * For the purposes of the plugin docs, we're going to assume that you know PHP and SQL,
  * as well as some semi-advanced concepts like object-oriented programming and PHP namespaces.
  *
- * https://docs.craftcms.com/v3/extend/
+ * https://docs.craftcms.com/v4/extend/
  *
  * @author    Salt
  * @package   Craftauth0
@@ -65,7 +65,7 @@ class Auth0 extends Plugin
     // =========================================================================
 
     /**
-     * To execute your plugin’s migrations, you’ll need to increase its schema version.
+     * To execute your plugin's migrations, you'll need to increase its schema version.
      *
      * @var string
      */
