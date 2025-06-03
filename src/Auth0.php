@@ -158,14 +158,17 @@ class Auth0 extends Plugin
             UrlManager::class,
             UrlManager::EVENT_REGISTER_CP_URL_RULES,
             function(RegisterUrlRulesEvent $event) {
-                // Override all possible login/logout routes
-                $event->rules['login'] = 'craft-auth0/login/auth';
-                $event->rules['logout'] = 'craft-auth0/logout/logout';
-                $event->rules['admin/login'] = 'craft-auth0/login/auth';
-                $event->rules['admin/logout'] = 'craft-auth0/logout/logout';
-                // Catch any login route variations
-                $event->rules['<path:.*>/login'] = 'craft-auth0/login/auth';
-               
+                // Override all possible login/logout routes with higher priority
+                // Put these at the beginning of the rules array to ensure they take precedence
+                $authRules = [
+                    'login' => 'craft-auth0/login/auth',
+                    'logout' => 'craft-auth0/logout/logout',
+                    'admin/login' => 'craft-auth0/login/auth',
+                    'admin/logout' => 'craft-auth0/logout/logout',
+                ];
+                
+                // Prepend our rules to ensure they have priority
+                $event->rules = array_merge($authRules, $event->rules);
             }
         );
 

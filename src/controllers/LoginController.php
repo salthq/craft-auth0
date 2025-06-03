@@ -58,14 +58,19 @@ class LoginController extends Controller
     private $originUrl;
    
     public function actionAuth() {
+        // Add debugging to help diagnose the issue
+        Craft::info('Auth0 LoginController::actionAuth() called from: ' . Craft::$app->getRequest()->getUrl(), __METHOD__);
 
         $this->originUrl = Craft::$app->getRequest()->referrer;
         
         $this->redirectUrl = Craft::$app->getRequest()->getParam('redirect') ?? '/admin';
    
-        if ($user = Craft::$app->getUser()->getIdentity()) {    
+        if ($user = Craft::$app->getUser()->getIdentity()) {
+            Craft::info('User already logged in, redirecting to: ' . $this->redirectUrl, __METHOD__);
             return $this->redirect($this->redirectUrl);
         }
+        
+        Craft::info('User not logged in, starting Auth0 flow', __METHOD__);
         
         $authorize_params = [
             'scope' => 'openid profile email offline_access'
@@ -77,11 +82,14 @@ class LoginController extends Controller
         
         $auth0Config = Craft::$app->config->getConfigFromFile('craft-auth0');
         if (!$auth0Config) {
+            Craft::error('Auth0 configuration not found. Please check your craft-auth0.php config file.', __METHOD__);
             throw new \Exception('Auth0 configuration not found. Please check your craft-auth0.php config file.');
         }
         
+        Craft::info('Creating Auth0 instance and starting login', __METHOD__);
         $auth0 = new Auth0($auth0Config);
       
+        // The Auth0 login() method should redirect to Auth0
         return $auth0->login(null, null, $authorize_params,'code');
    }
 
