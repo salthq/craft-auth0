@@ -35,7 +35,9 @@ class UserController extends Controller
         } 
         if (!$user_data) {
            
-                 // Try create them
+            // Only proceed if email is available
+            if ($user->email) {
+                // Try create them
                 $user_data = (new Auth0ApiService)->searchAuth0UserByEmail($user->email);
                
                 if (empty($user_data)) {
@@ -46,13 +48,15 @@ class UserController extends Controller
                 } else {
                     $user->setSub($user_data[0]->user_id);
                 }
-            
+            }
 
         } 
         // If reset password wansn't set but admin specifically checked it, then send
         if ($user->firstSave || $user->passwordResetRequired) {
-            // Send Password reset email
-            (new Auth0ApiService)->sendPasswordResetEmail($user->email);
+            // Send Password reset email - but only if email is available
+            if ($user->email) {
+                (new Auth0ApiService)->sendPasswordResetEmail($user->email);
+            }
         }
 
         return $user;
