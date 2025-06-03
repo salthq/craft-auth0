@@ -157,7 +157,13 @@ class Auth0 extends Plugin
             error_log('DEBUG: Checking URL: ' . $url);
             
             // Don't intercept our own controller routes to prevent redirect loops
-            if (strpos($url, 'r=craft-auth0') !== false || strpos($url, 'craft-auth0/') !== false) {
+            $hasOurRoute1 = strpos($url, 'r=craft-auth0');
+            $hasOurRoute2 = strpos($url, 'craft-auth0/');
+            
+            error_log('DEBUG: strpos for r=craft-auth0: ' . ($hasOurRoute1 !== false ? $hasOurRoute1 : 'false'));
+            error_log('DEBUG: strpos for craft-auth0/: ' . ($hasOurRoute2 !== false ? $hasOurRoute2 : 'false'));
+            
+            if ($hasOurRoute1 !== false || $hasOurRoute2 !== false) {
                 error_log('DEBUG: Skipping interception - this is our own controller route');
                 return;
             }
