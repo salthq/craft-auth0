@@ -19,29 +19,7 @@ class LoginController extends Controller
     /**
      * @inheritdoc
      */
-    public function beforeAction($action): bool
-    {
-        // Allow anonymous access to auth and callback actions
-        if (in_array($action->id, ['auth', 'callback'])) {
-            // Skip authentication check for these actions
-            return parent::beforeAction($action);
-        }
-        
-        return parent::beforeAction($action);
-    }
-    
-    /**
-     * @inheritdoc
-     */
-    protected function checkAccess($action): void
-    {
-        // Allow anonymous access to auth and callback actions
-        if (in_array($action->id, ['auth', 'callback'])) {
-            return;
-        }
-        
-        parent::checkAccess($action);
-    }
+    protected array|int|bool $allowAnonymous = ['auth', 'callback'];
 
      /**
      * URL to redirect to after login.
