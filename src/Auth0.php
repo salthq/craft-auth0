@@ -69,24 +69,24 @@ class Auth0 extends Plugin
      *
      * @var string
      */
-    public $schemaVersion = '1';
+    public string $schemaVersion = '1';
 
     /**
      * Set to `true` if the plugin should have a settings view in the control panel.
      *
      * @var bool
      */
-    public $hasCpSettings = false;
+    public bool $hasCpSettings = false;
 
     /**
      * Set to `true` if the plugin should have its own section (main nav item) in the control panel.
      *
      * @var bool
      */
-    public $hasCpSection = false;
+    public bool $hasCpSection = false;
 
     /** @var array */
-    public $controllerMap = [
+    public array $controllerMap = [
         'login' => LoginController::class,
         'logout' => LogoutController::class,
         'user' => UserController::class,

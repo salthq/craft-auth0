@@ -12,6 +12,7 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 -   Updated composer requirements to require Craft CMS ^4.0.0 instead of ^3.0.0
 -   Updated plugin comments and documentation references to point to Craft 4.x
 -   Updated environment variable handling in config.php to use Craft's App::env() helper
+-   Added explicit type declarations (string, bool, array) to plugin properties to match Craft 4's base Plugin class requirements
 
 ### Notes
 
