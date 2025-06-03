@@ -42,6 +42,11 @@ class LoginController extends Controller
         // Add debugging to help diagnose the issue
         Craft::info('Auth0 LoginController::actionAuth() called from: ' . Craft::$app->getRequest()->getUrl(), __METHOD__);
 
+        // Check session state immediately
+        $session = Craft::$app->getSession();
+        error_log('DEBUG: Session ID at start of actionAuth: ' . $session->getId());
+        error_log('DEBUG: User guest status at start: ' . (Craft::$app->getUser()->getIsGuest() ? 'guest' : 'logged in'));
+
         $this->originUrl = Craft::$app->getRequest()->referrer;
         
         $this->redirectUrl = Craft::$app->getRequest()->getParam('redirect') ?? '/admin';
@@ -49,7 +54,11 @@ class LoginController extends Controller
         if ($user = Craft::$app->getUser()->getIdentity()) {
             error_log('DEBUG: User already logged in, redirecting to: ' . $this->redirectUrl);
             Craft::info('User already logged in, redirecting to: ' . $this->redirectUrl, __METHOD__);
-            return $this->redirect($this->redirectUrl);
+            
+            // Use a JavaScript redirect to preserve the session
+            return $this->renderTemplate('_auth0/redirect', [
+                'redirectUrl' => $this->redirectUrl
+            ]);
         }
         
         error_log('DEBUG: User not logged in, starting Auth0 flow');
@@ -218,7 +227,11 @@ class LoginController extends Controller
         }
 
         error_log('DEBUG: Redirecting to: ' . $login_redirect);
-        return $this->redirect($login_redirect);
+        
+        // Use template redirect to preserve session
+        return $this->renderTemplate('_auth0/redirect', [
+            'redirectUrl' => $login_redirect
+        ]);
     }
 
     /**
