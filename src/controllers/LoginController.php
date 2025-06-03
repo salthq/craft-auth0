@@ -58,8 +58,8 @@ class LoginController extends Controller
     private $originUrl;
    
     public function actionAuth() {
-        // Very basic debugging - this should definitely show up
-        error_log('DEBUG: Auth0 LoginController::actionAuth() called!');
+        // Basic debugging to see if controller is called
+        error_log('DEBUG: LoginController::actionAuth() called - controller is working!');
         
         // Add debugging to help diagnose the issue
         Craft::info('Auth0 LoginController::actionAuth() called from: ' . Craft::$app->getRequest()->getUrl(), __METHOD__);
@@ -87,13 +87,16 @@ class LoginController extends Controller
         
         $auth0Config = Craft::$app->config->getConfigFromFile('craft-auth0');
         if (!$auth0Config) {
+            error_log('DEBUG: Auth0 config not found!');
             Craft::error('Auth0 configuration not found. Please check your craft-auth0.php config file.', __METHOD__);
             throw new \Exception('Auth0 configuration not found. Please check your craft-auth0.php config file.');
         }
         
+        error_log('DEBUG: Auth0 config found, creating Auth0 instance');
         Craft::info('Creating Auth0 instance and starting login', __METHOD__);
         $auth0 = new Auth0($auth0Config);
       
+        error_log('DEBUG: Calling Auth0 login method');
         // The Auth0 login() method should redirect to Auth0
         return $auth0->login(null, null, $authorize_params,'code');
    }

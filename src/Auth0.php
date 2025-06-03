@@ -157,12 +157,17 @@ class Auth0 extends Plugin
                 return;
             }
             
+            // Don't intercept if this is already our login route being processed
+            if ($url === '/login' && $request->getSegment(1) === 'login') {
+                return;
+            }
+            
             if (strpos($url, '/login') !== false || strpos($url, '/admin/login') !== false) {
                 Craft::info('Auth0 plugin: Intercepting login request: ' . $url, __METHOD__);
                 
-                // Redirect to our Auth0 login controller
+                // Redirect to our Auth0 login controller using the clean route
                 $response = Craft::$app->getResponse();
-                $response->redirect('/?r=craft-auth0/login/auth');
+                $response->redirect('/login');
                 $event->isValid = false; // Stop the original action
                 Craft::$app->end();
             }
