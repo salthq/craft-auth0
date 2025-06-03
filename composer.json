@@ -27,7 +27,7 @@
 	},
 	"require-dev": {
 		"craftcms/cms": "^4.0.0",
-		"codeception/codeception": "^3.0",
+		"codeception/codeception": "^4.0",
 		"vlucas/phpdotenv": "^3.0"
 	},
 	"autoload": {
@@ -43,5 +43,11 @@
 		"documentationUrl": "https://github.com/pangostudio/craft-auth0/blob/master/README.md",
 		"changelogUrl": "https://raw.githubusercontent.com/pangostudio/craft-auth0/master/CHANGELOG.md",
 		"class": "salt\\craftauth0\\Auth0"
+	},
+	"config": {
+		"allow-plugins": {
+			"yiisoft/yii2-composer": true,
+			"craftcms/plugin-installer": true
+		}
 	}
 }

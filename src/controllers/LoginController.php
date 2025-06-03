@@ -69,7 +69,7 @@ class LoginController extends Controller
             return $this->registerOrLoginFromProfile($profile);
 
         // } catch(\Exception $e) {
-        //     Craft::error('Couldn’t login. '. $e->getTraceAsString(), __METHOD__);
+        //     Craft::error('Couldn't login. '. $e->getTraceAsString(), __METHOD__);
         //     return $this->redirect($this->originUrl);
         // }
 
@@ -81,7 +81,7 @@ class LoginController extends Controller
         // Upsert new user
         $craftUser = $this->upsertUser($profile);
         if (!$craftUser) {
-            throw new RegistrationException('Craft user couldn’t be created.');
+            throw new \Exception('Craft user could not be created.');
         }
 
 
@@ -134,7 +134,7 @@ class LoginController extends Controller
         // Save user
         if (!Craft::$app->elements->saveElement($newUser)) {
             Craft::error('There was a problem creating the user:' . print_r($newUser->getErrors(), true), __METHOD__);
-            throw new RegistrationException('Craft user couldn’t be created.');
+            throw new \Exception('Craft user could not be created.');
         }
 
         return $newUser;
@@ -165,7 +165,7 @@ class LoginController extends Controller
      */
     private function _handleLoginFailure(): Response
     {
-        $this->setError(Craft::t('social', 'Couldn’t authenticate.'));
+        $this->setError(Craft::t('social', 'Could not authenticate.'));
 
         return $this->redirect($this->originUrl);
     }
