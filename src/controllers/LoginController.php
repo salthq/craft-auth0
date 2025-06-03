@@ -64,8 +64,9 @@ class LoginController extends Controller
         $this->redirectUrl = Craft::$app->getRequest()->getParam('redirect') ?? '/admin';
    
         if ($user = Craft::$app->getUser()->getIdentity()) {    
-            $this->redirect($this->redirectUrl);
+            return $this->redirect($this->redirectUrl);
         }
+        
         $authorize_params = [
             'scope' => 'openid profile email offline_access'
         ];
@@ -75,6 +76,10 @@ class LoginController extends Controller
         };
         
         $auth0Config = Craft::$app->config->getConfigFromFile('craft-auth0');
+        if (!$auth0Config) {
+            throw new \Exception('Auth0 configuration not found. Please check your craft-auth0.php config file.');
+        }
+        
         $auth0 = new Auth0($auth0Config);
       
         return $auth0->login(null, null, $authorize_params,'code');
