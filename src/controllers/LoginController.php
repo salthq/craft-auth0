@@ -130,19 +130,26 @@ class LoginController extends Controller
      */
     protected function upsertUser(array $profile): User
     {
+        error_log('DEBUG: upsertUser called with email: ' . $profile['email']);
 
         // Registration of an existing user with a matching email
         $user = Craft::$app->users->getUserByUsernameOrEmail($profile['email']);
         
         if ($user) {
+            error_log('DEBUG: Found existing user: ' . $user->email);
             // Check if sub has been set, otherwise set it
             
             if ($user->getSub() !== $profile['sub']) {
                 $user->setSub($profile['sub']);
+                // Save the user to persist the sub
+                if (!Craft::$app->elements->saveElement($user)) {
+                    error_log('DEBUG: Failed to save existing user with sub');
+                }
             }
             return $user;
         }
 
+        error_log('DEBUG: Creating new user');
         $newUser = new User();
       
         // Generate username 
@@ -154,6 +161,8 @@ class LoginController extends Controller
         $name = trim($firstPart).trim($secondPart);
         $username = $name.trim($nrRand);
 
+        error_log('DEBUG: Setting user attributes - email: ' . $profile['email'] . ', name: ' . $profile['name'] . ', username: ' . $username);
+
         $newUser->setAttributes([
             'email' => $profile['email'],
             'name' => $profile['name'],
@@ -162,12 +171,16 @@ class LoginController extends Controller
    
         $newUser->setSub($profile['sub']);
 
+        error_log('DEBUG: Before save - user email: ' . $newUser->email);
+
         // Save user
         if (!Craft::$app->elements->saveElement($newUser)) {
+            error_log('DEBUG: Failed to save new user: ' . print_r($newUser->getErrors(), true));
             Craft::error('There was a problem creating the user:' . print_r($newUser->getErrors(), true), __METHOD__);
             throw new \Exception('Craft user could not be created.');
         }
 
+        error_log('DEBUG: After save - user email: ' . $newUser->email);
         return $newUser;
     }
 
@@ -186,7 +199,11 @@ class LoginController extends Controller
         $session = Craft::$app->getSession();
         $session->setFlash('login','You have been successfully logged in');
         
-        $login_redirect = Craft::$app->config->general->__isset('auth0LoginRedirect') ? Craft::$app->config->general->auth0LoginRedirect : '/';
+        // Check if auth0LoginRedirect is set in the general config
+        $login_redirect = '/admin'; // Default to admin panel
+        if (isset(Craft::$app->config->general->auth0LoginRedirect)) {
+            $login_redirect = Craft::$app->config->general->auth0LoginRedirect;
+        }
 
         error_log('DEBUG: Redirecting to: ' . $login_redirect);
         return $this->redirect($login_redirect);
