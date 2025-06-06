@@ -18,6 +18,11 @@ class LogoutController extends Controller
     /**
      * @inheritdoc
      */
+    protected array|bool|int $allowAnonymous = ['logout'];
+    
+    /**
+     * @inheritdoc
+     */
     public function beforeAction($action): bool
     {
         // Allow anonymous access to logout action
