@@ -26,7 +26,6 @@
 		"auth0/auth0-php": "^7.9.2"
 	},
 	"require-dev": {
-		"craftcms/cms": "^4.0.0",
 		"codeception/codeception": "^4.0",
 		"vlucas/phpdotenv": "^3.0"
 	},
